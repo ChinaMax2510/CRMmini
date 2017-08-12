@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+<!-- 由spring来管理struts2的action实例 -->
+<!-- <constant name="struts.objectFactory" value="spring"/> -->
+	<constant name="struts.action.extension" value="do"></constant>
+	<!-- 设置为简单主题 -->
+	<constant name="struts.ui.theme" value="simple"></constant>
+	<!-- 设置为开发模式 
+	原因就是devMode下表中的输入会在动作中找到针对输入名称的setter
+	（webwork.devMode = false ：设置为真时，所有有名字（姓名）的输入都必须有对应的setter），
+	页面jsp中名为提交的标签在动作中没有对应的setter方法所致
+	-->
+	<constant name="struts.devMode" value="false"></constant>
+	
+	<!-- 客户管理模块 -->
+	<package name="Company" namespace="/com" extends="struts-default">
+			<action name="Company_*" class="com.zy.crm.web.action.CompanyAction" method="{1}">
+				<result name="list">/WEB-INF/page/crm/customer/base/list.jsp</result>
+				<result name="add">/WEB-INF/page/crm/customer/base/add.jsp</result>
+				<result name="SHOW" type="redirectAction">Company_list.do</result>
+				<result name="edit" >/WEB-INF/page/crm/customer/base/edit.jsp</result>
+				<result name="share">/WEB-INF/page/crm/customer/base/shareSetOne.jsp</result>
+				<result name="SHARE" type="chain">
+					<param name="actionName">Company_shoeShareOne</param>
+					<param name="namespace">/com</param>
+				</result>
+				<result name="cancelView">/WEB-INF/page/crm/customer/base/shareCancelOne.jsp</result>
+				<!-- <result name="shareCancel" type="chain" >
+					<param name="actionName">Company_showShareCancel</param>
+					<param name="namespace">/com</param>
+				</result> -->
+				<result name="shareCancel" type="redirectAction">Company_showShareCancel.do</result>
+				
+				<result name="shareView">/WEB-INF/page/crm/customer/base/shareViewOne.jsp</result>
+				<result name="nextTouchTime">/WEB-INF/page/crm/customer/base/nextTouchTime.jsp</result>
+				<result name="changePerson">/WEB-INF/page/crm/customer/base/changePerson.jsp</result>
+		   </action>
+			    <!-- 客户 报表分析-->
+			   <action name="reportAction_*" class="com.zy.crm.web.action.ReportAction" method="{1}">
+			   			<result name="report">/WEB-INF/page/report/khflfxReport.jsp</result>
+			   			<result name="usersreport">/WEB-INF/page/report/usersReport.jsp</result>
+			   </action>
+	
+	</package>
+	
+	
+	
+	<!-- 系统设置模块 -->
+    <package name="System" namespace="/sys" extends="struts-default">
+    
+    			<!-- 配置拦截器 -->
+    			<interceptors>
+    					<interceptor name="LimitInterceptor" class="com.zy.crm.interceptor.LimitInterceptor"/>
+    					<interceptor-stack name="limitStack">
+    						<interceptor-ref name="defaultStack"/>
+    						<interceptor-ref name="LimitInterceptor">
+    							<!-- 配置那些方法不被拦截 -->
+    							<param name="excludeMethods">UserLogin,top,left,welcome</param>
+    						</interceptor-ref>
+    					</interceptor-stack>
+    			</interceptors>
+    			<!-- 启用拦截器 --><default-interceptor-ref name="limitStack"></default-interceptor-ref>
+    			
+    			
+    			<global-results>
+    				<result name="popmsg_popedom">/WEB-INF/page/popmsg_popedom.jsp</result>
+    			</global-results>
+    
+    			<action name="GroupAction_*" class="com.zy.crm.web.action.GroupAction" method="{1}">
+    				<result name="add">/WEB-INF/page/sys/group/add.jsp</result>
+    				<result name="list">/WEB-INF/page/sys/group/list.jsp</result>
+    				<result name="LIST" type="redirectAction">GroupAction_list.do</result>
+    				<result name="edit">/WEB-INF/page/sys/group/edit.jsp</result>
+    			</action>
+    			<action name="menuAction_*" class="com.zy.crm.web.action.MenuAction" method="{1}">
+    				<result name="top">/WEB-INF/page/menu/top.jsp</result>
+    				<result name="left">/WEB-INF/page/menu/left.jsp</result>
+    				<result name="welcome">/WEB-INF/page/menu/welcome.jsp</result>
+    			</action>
+    			<action name="sysRoleAction_*" class="com.zy.crm.web.action.RoleAction" method="{1}">
+    				<result name="list">/WEB-INF/page/sys/role/list.jsp</result>
+    				<result name="LIST" type="redirectAction">sysRoleAction_list.do</result>
+    				<result name="add">/WEB-INF/page/sys/role/add.jsp</result>
+    				<result name="edit">/WEB-INF/page/sys/role/edit.jsp</result>
+    				<result name="listpopdeom">/WEB-INF/page/sys/role/popedom/view.jsp</result>
+    				<result name="update" type="chain">
+    					<param name="actionName">sysRoleAction_ListPopdeom</param>
+    					<param name="namespace">/sys</param>
+    				</result>
+    				
+    				
+    				
+    				<result name="listMenu">/WEB-INF/page/sys/role/menu/view.jsp</result>
+    				<result name="updateMenu" type="chain">
+    					<param name="actionName">sysRoleAction_listMenu</param>
+    					<param name="namespace">/sys</param>
+    				</result>
+    			</action>
+    			
+    			
+    			<action name="loginAction_*" class="com.zy.crm.web.action.UserAction" method="{1}">
+    				<result name="main">/WEB-INF/page/menu/main.jsp</result>
+    				<result name="login">/WEB-INF/page/login.jsp</result>
+    			</action>
+    			<action name="userAction_*" class="com.zy.crm.web.action.UserAction" method="{1}">
+    				<result name="show">/WEB-INF/page/sys/user/list.jsp</result>
+    				<result name="add">/WEB-INF/page/sys/user/add.jsp</result>
+    				<result name="edit">/WEB-INF/page/sys/user/edit.jsp</result>
+    				<result name="SHOW" type="redirectAction">userAction_userShow.do</result>
+    			</action>
+
+
+    </package>
+</struts>

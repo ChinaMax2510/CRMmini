@@ -1,0 +1,32 @@
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    <hibernate-mapping>
+    <class name="com.zy.crm.domain.DictionaryType" table="sys_dictionary_type" >
+		<cache usage="read-write"/> <!-- 二级缓存的配置 -->
+		<id name="id" type="java.lang.Integer" >
+		  <column name="id" />
+		  <generator class="identity" ></generator>
+		</id>
+    	<property name="sort" type="java.lang.Integer">
+            <column name="sort" />
+        </property>
+        <property name="remark" type="text">
+            <column name="remark"/>
+        </property>
+        <property name="code" type="string">
+            <column name="code" sql-type="varchar(100)"/>
+        </property>
+        <property name="value" type="string">
+            <column name="value" sql-type="varchar(200)"/>
+        </property>
+        <property name="sysFlag" type="java.lang.Character">
+            <column name="sysFlag" />
+        </property>
+        
+        
+    				
+    		</class>
+    	
+    </hibernate-mapping>

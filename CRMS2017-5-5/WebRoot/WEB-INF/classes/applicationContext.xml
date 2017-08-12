@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+<!-- 扫描spring注解 -->
+<context:component-scan base-package="com.zy.crm.*"></context:component-scan>
+<!-- <context:annotation-config/>    配置了包扫描之后，<context annotation-config />就可以移除了 -->
+
+	 <!-- 
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+			<property name="dataSource" ref="dataSource"/>
+			<property name="hibernateProperties">
+				<props>
+					<prop key="hibernate.dialecthibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+	                
+					<prop key="hibernate.show_sql">true</prop>
+					<prop key="hibernate.format_sql">true</prop>
+					<prop key="hibernate.hbm2ddl.auto">update</prop>														
+				</props>								
+			</property>
+	</bean> -->
+	
+	<!-- 配置本地化代理工程  hibernate  spring 整合入口 -->
+	<!-- <bean id="sessionFactoryss" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="configLocation">
+		 在类路径加载hibernate.cfg.xml 
+			<value>classpath:hibernate.cfg.xml</value>
+		</property>
+	</bean> -->
+	
+	<!-- 引入properties文件 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+	
+	<!--  c3p0连接池 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 连接池中保留的最小连接数  mainpoolSize -->
+		<property name="minPoolSize" value="3"/>
+		<!-- 连接池中保留的最大连接数  maxpoolSize -->
+		<property name="maxPoolSize" value="30"/>
+		<!-- 初始化时获取的连接数 -->
+		<property name="initialPoolSize" value="10"/>
+		<!-- 60秒内未使用改连接则被被丢弃 -->
+		<property name="maxIdleTime" value="60"/>
+		<!-- 当现有连接池被用完时，会额外获取5个连接 -->
+		<property name="acquireIncrement" value="5"/>
+		<!-- 用于控制数据源PreparedStatement的数量但由于预缓存的statements  
+			属于单个connection而不是整个连接池。所以设置这个参数需要考虑到多方面的因素。 -->
+		<property name="maxStatements" value="0"/>
+		<!-- 每隔50秒检查一次连接池中的空闲连接 -->
+		<property name="idleConnectionTestPeriod" value="50"/>
+		<!-- 连接失败后重复尝试连接的次数 -->
+		<property name="acquireRetryAttempts" value="30"></property>
+		<!--获取连接失败将会引起所有等待连接池来获取连接的线程抛出异常。但是数据源仍有效  
+			保留，并在下次调用getConnection()的时候继续尝试获取连接。如果设为true，那么在尝试  
+			获取连接失败后该数据源将申明已断开并永久关闭。Default: false-->
+		<property name="breakAfterAcquireFailure" value="true"></property>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+	  		<property name="dataSource" ref="dataSource"></property>
+	  		<property name="hibernateProperties">
+						<props>
+				<!-- 方言 在hibernate.cfg.xml 配置hibernate属性 ，可以省略 hibernate. hbm2ddl.auto
+				如果在applicationContext.xml 配置hibernate属性，不能省略 hibernate. 
+				-->
+						<prop key="hibernate.dialecthibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+						<!-- 显示sql语句 -->
+						<prop key="hibernate.show_sql">true</prop>
+						<prop key="hibernate.format_sql">true</prop>
+						<prop key="hibernate.hbm2ddl.auto">update</prop>
+						<!-- 二级缓存 -->
+								<!-- 启用二级缓存 -->
+								<prop key="hibernate.cache.use_second_level_cache">true</prop>
+								<!-- 二级缓存供应商 -->
+								<prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+								<!-- 配置查询缓存 -->
+								<prop key="hibernate.cache.use_query_cache">true</prop>
+								<!-- 配置类级别二级缓存 <prop key="hibernate.cache.provider_class">com.zy.crm.domain.PopdeomPrivilege</prop>-->
+								
+				</props>
+				
+				</property>
+				<!-- 映射文件  包扫描-->
+				<property name="mappingResources" >
+							<list >
+									<value>com/zy/crm/domain/Group.hbm.xml</value>
+									<value>com/zy/crm/domain/Role.hbm.xml</value>
+									<value>com/zy/crm/domain/User.hbm.xml</value>
+									<value>com/zy/crm/domain/Popdeom.hbm.xml</value>
+									<value>com/zy/crm/domain/PopdeomPrivilege.hbm.xml</value>
+									<value>com/zy/crm/domain/Menu.hbm.xml</value>
+									<value>com/zy/crm/domain/MenuPrivilege.hbm.xml</value>
+									<value>com/zy/crm/domain/Company.hbm.xml</value>
+									<value>com/zy/crm/domain/Code.hbm.xml</value>
+									<value>com/zy/crm/domain/DictionaryType.hbm.xml</value>
+									<value>com/zy/crm/domain/Province.hbm.xml</value>
+									<value>com/zy/crm/domain/City.hbm.xml</value>
+									<value>com/zy/crm/domain/OperateeLogg.hbm.xml</value>
+							</list>
+				</property>
+	
+	            </bean>
+	
+	
+	
+	<!-- 事务管理器 -->
+	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      <property name="sessionFactory" ref="sessionFactory"/>
+   </bean>
+   <!--配置处理事务的注解-->
+   <tx:annotation-driven transaction-manager="txManager"/>
+	
+	<!--  配置事务通知
+	 <tx:advice id="tranactionAdive" transaction-manager="TranscationManager" >
+		<tx:attributes>
+			<tx:method name="save" isolation="SERIALIZABLE" timeout="-1"/>
+		</tx:attributes>
+	</tx:advice>
+	 配置切点  指向目标（类）
+	<aop:config>
+				<aop:advisor advice-ref="tranactionAdive" pointcut="execution(* com.zy.crm.service.impl.*.*(..)"/>
+	</aop:config> -->
+	
+	
+	
+	 <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+	 	<property name="sessionFactory" ref="sessionFactory"></property>
+	 	<property name="cacheQueries"><!-- 二级缓存  查询缓存 -->
+	 		<value>true</value>
+	 	</property>
+	 </bean>
+	 <!-- 部门管理 -->
+	 <bean id="SysGroupDaoImpl" class="com.zy.crm.daoimpl.SysGroupDaoImpl"></bean>
+	 <bean id="GroupSerivceImpl" class="com.zy.crm.serviceimpl.GroupSerivceImpl"></bean>
+	 <!-- 用户权限 -->
+	 <bean id="RoleDaoImpl" class="com.zy.crm.daoimpl.RoleDaoImpl"></bean>
+	 <bean id="roleServiceImpl" class="com.zy.crm.serviceimpl.RoelServiceImpl"></bean>
+	 <!-- 用户管理 -->
+	  <bean id="UserDaoImpl" class="com.zy.crm.daoimpl.UserDaoImpl"></bean>
+	  <bean id="UserServiceImpl" class="com.zy.crm.serviceimpl.UserServiceImpl"></bean>
+	  <!-- 权限功能 -->
+	  <bean id="PopdeomDaoImpl" class="com.zy.crm.daoimpl.PopdeomDaoImpl"></bean>
+	  <bean id="PopdeomServiceImpl" class="com.zy.crm.serviceimpl.PopdeomServiceImpl"></bean>
+	  
+	  <!-- 操作权限 -->
+	  <bean id="PopdeomPrivilegeDaoImpl" class="com.zy.crm.daoimpl.PopdeomPrivilegeDaoImpl"></bean>
+	  <bean id="PopdeomPrivilegeImpl" class="com.zy.crm.serviceimpl.PopdeomPrivilegeImlp"></bean>
+	  <!-- 菜单权限显示 -->
+	  <bean id="MenuDaoImpl" class="com.zy.crm.daoimpl.MenuDaoImpl"/>
+	  <bean id="MenuServiceImpl" class="com.zy.crm.serviceimpl.MenuServiceImpl"/>
+	  <!-- 菜单权限更新 -->
+	  <bean id="MenuPrivilegeDaoImpl" class="com.zy.crm.daoimpl.MenuPrivilegeDaoImpl"></bean>
+	  <bean id="MenuPrivilegeServiceImpl" class="com.zy.crm.serviceimpl.MenuPrivilegeServiceImpl"></bean>
+	  
+	  <!-- 编码规则 -->
+	  <bean id="CodRuleDaoImpl" class="com.zy.crm.daoimpl.CodRuleDaoImpl"></bean>
+	  
+	  <!-- 客户拜访 -->
+	  <bean id="CompanyDaoImpl" class="com.zy.crm.daoimpl.CompanyDaoImpl"/>
+	  <bean id="CompanyServiceImpl" class="com.zy.crm.serviceimpl.CompanyServiceImpl"/>
+	  <!-- 下拉表显示 -->
+	  <bean id="DictionaryDaoImpl" class="com.zy.crm.daoimpl.DictionaryDaoImpl"/>
+	  <bean id="DictionaryServiceImpl" class="com.zy.crm.serviceimpl.DictionaryServiceImpl"></bean>
+	  <!-- 省份 -->
+	  <bean id="ProvinceDaoImpl" class="com.zy.crm.daoimpl.ProvinceDaoImpl"></bean>
+	  <bean id="ProvinceServiceImpl" class="com.zy.crm.serviceimpl.ProvinceServiceImpl"></bean>
+	  <!-- 城市 -->
+	  <bean id="CityDaoImpl" class="com.zy.crm.daoimpl.CityDaoImpl"></bean>
+	  <bean id="CityServiceImpl" class="com.zy.crm.serviceimpl.CityServiceImpl"></bean>
+	  <!-- 操作日志记录 -->
+	  <bean id="OperateLoggImpl" class="com.zy.crm.daoimpl.OperateLoggImpl"></bean>
+	  <!-- 报表统计 -->
+	  <bean id="ReportDaoImpl" class="com.zy.crm.daoimpl.ReportDaoImpl"></bean>
+	  <bean id="ReportServiceImpl" class="com.zy.crm.serviceimpl.ReportServiceImpl"></bean>
+</beans>

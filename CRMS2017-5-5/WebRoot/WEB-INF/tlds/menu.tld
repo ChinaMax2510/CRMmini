@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+    version="2.0"><!-- 标签库跟元素 -->
+  <description>menu 1.o core library</description><!-- -描述信息 -->
+  <display-name>core</display-name><!-- 图形工具可显示的一个简短名称 -->
+  <tlib-version>1.0</tlib-version><!-- 标签库版本  必须 -->
+  <short-name>myTag</short-name><!-- 当在JSP中使用标签时，此标签库首选或者建议的  前缀。当然可以完全忽略这个建议 -->
+  <uri></uri>
+  <tag>
+    <name>checkMemu</name>
+    <tag-class>com.zy.crm.tag.CheckMenu</tag-class>
+    <!-- 标签体不能为空      可以包含其他标签体-->
+    <body-content>scriptless</body-content>
+    
+    <!-- 标签属性 与标签类中一致 -->
+    <attribute>
+        <name>module</name>
+        <required>true</required><!-- 必须的 -->
+        <rtexprvalue>true</rtexprvalue><!-- 支持el表达式 -->
+    </attribute>
+    <attribute>
+        <name>privilege</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+</taglib>

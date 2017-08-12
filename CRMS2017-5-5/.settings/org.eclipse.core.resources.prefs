@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//WebRoot/WEB-INF/page/menu/left.jsp=UTF-8
+encoding//WebRoot/ui/css/style_cn.css=UTF-8
+encoding//src/com/zy/crm/domain/Group.java=UTF-8
+encoding//src/com/zy/crm/utils/MD5keyBean.java=UTF-8
+encoding//src/com/zy/crm/utils/PingyinUtils.java=UTF-8
+encoding//src/junits/dao.java=UTF-8
+separateDerivedEncodings=true

@@ -1,0 +1,24 @@
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    <hibernate-mapping>
+    		<class name="com.zy.crm.domain.PopdeomPrivilege" table="sys_popedom_privilege">
+    				<cache usage="read-write"/> <!-- 二级缓存的配置 -->
+    				<!-- 祝贺主键 -->
+    				<composite-id name="ids" class="com.zy.crm.domain.PopdeomPrivilegeID">
+    						<key-property name="roleId" type="string">
+    							<column name="roleId" sql-type="varchar(36)"/>
+    						</key-property>
+    						<key-property name="popedomModule" type="string">
+    							<column name="popedomModule" sql-type="varchar(30)"></column>
+    						</key-property>
+    						<key-property name="popedomPrivilege" type="string">
+    							<column name="popedomPrivilege" sql-type="varchar(30)"></column>
+    						</key-property>
+    				</composite-id>
+    				
+    				
+    		</class>
+    	
+    </hibernate-mapping>
